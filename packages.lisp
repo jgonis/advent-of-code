@@ -11,7 +11,8 @@
 (defpackage :advent-of-code-2018
   (:nicknames :aoc-18)
   (:use :common-lisp)
-  (:export :problem1))
+  (:export :problem1-1
+           :problem1-2))
 
 (defpackage :aoc-utils
   (:use :common-lisp)
