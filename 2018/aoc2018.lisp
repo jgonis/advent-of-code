@@ -8,12 +8,22 @@
 
 
 (defun problem1-2 (input-path)
-  (let ((freqs '())
-        (frequency 0)
-        (dupe-found '()))
+  (let ((freq-offsets '()))
     (with-open-file (in-stream input-path)
       (do ((line (read-line in-stream) (read-line in-stream nil nil)))
           ((null line) nil)
-        (push (parse-integer line) freqs)))
-    (loop while (null dupe-found))) 
+        (push (parse-integer line) freq-offsets)))
+    (setf freq-offsets (reverse freq-offsets))
+    (setf (cdr (last freq-offsets)) freq-offsets)
+    (problem1-2helper freq-offsets)))
 
+(defun problem1-2helper (offset-list)
+  (let ((calculated-freqs (make-hash-table))
+        (current-freq 0))
+    (dolist (offset offset-list)
+      (setf current-freq (+ offset current-freq))
+      (multiple-value-bind (value present) (gethash current-freq calculated-freqs)
+        (cond (present (return current-freq))
+              (t 
+               (setf (gethash current-freq calculated-freqs) current-freq)))))))
+    
