@@ -25,18 +25,45 @@
       (multiple-value-bind (value present) (gethash current-freq 
                                                     calculated-freqs)
         (cond (present (return current-freq))
-              (t 
-               (setf (gethash current-freq 
-                              calculated-freqs) 
-                     current-freq)))))))
+              (t (setf (gethash current-freq 
+                                calculated-freqs) 
+                       current-freq)))))))
 
 (defun problem2-1 (input-path)
   (let ((two-count 0)
         (three-count 0))
     (with-open-file (in-stream input-path)
-      (do ((line (read-line in-stream) (read-line instream nil nil))) 
+      (do ((line (read-line in-stream) (read-line in-stream nil nil))) 
           ((null line))
-        (let ((letter-count (make-hash-table)))
-          ())))))
+        (let* ((letters (map 'list (lambda (x) x) line))
+               (letter-hash (count-letters-in-word letters)))
+          (if (contains-double-char letter-hash)
+              (setf two-count (+ two-count 1)))
+          (if (contains-triple-char letter-hash)
+              (setf three-count (+ three-count 1))))))
+    (* two-count three-count)))
+
+(defun contains-double-char (letter-hash)
+  (contains-char-count letter-hash 2))
+
+(defun contains-triple-char (letter-hash)
+  (contains-char-count letter-hash 3))
+
+(defun contains-char-count (letter-hash count)
+  (with-hash-table-iterator (next letter-hash)
+    (loop (multiple-value-bind (more? key value) (next)
+            (unless more? (return '()))
+            (if (= value count)
+                (return t))))))
+
+(defun count-letters-in-word (letter-list)
+  (let ((letter-hash (make-hash-table)))
+    (mapcar (lambda (letter)
+              (multiple-value-bind (value present) (gethash letter letter-hash)
+                (cond ((null present) (setf (gethash letter letter-hash) 1))
+                      (t (setf (gethash letter letter-hash) (+ value 1)))))) 
+            letter-list)
+    letter-hash))
+
 (defun problem2-2 (input-path))
     
