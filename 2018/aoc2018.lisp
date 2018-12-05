@@ -22,8 +22,21 @@
         (current-freq 0))
     (dolist (offset offset-list)
       (setf current-freq (+ offset current-freq))
-      (multiple-value-bind (value present) (gethash current-freq calculated-freqs)
+      (multiple-value-bind (value present) (gethash current-freq 
+                                                    calculated-freqs)
         (cond (present (return current-freq))
               (t 
-               (setf (gethash current-freq calculated-freqs) current-freq)))))))
+               (setf (gethash current-freq 
+                              calculated-freqs) 
+                     current-freq)))))))
+
+(defun problem2-1 (input-path)
+  (let ((two-count 0)
+        (three-count 0))
+    (with-open-file (in-stream input-path)
+      (do ((line (read-line in-stream) (read-line instream nil nil))) 
+          ((null line))
+        (let ((letter-count (make-hash-table)))
+          ())))))
+(defun problem2-2 (input-path))
     

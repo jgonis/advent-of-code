@@ -16,4 +16,4 @@
 
 (defpackage :aoc-utils
   (:use :common-lisp)
-  (:export :meth1))
+  (:export :make-growable-vector))
