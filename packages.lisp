@@ -12,7 +12,9 @@
   (:nicknames :aoc-18)
   (:use :common-lisp)
   (:export :problem1-1
-           :problem1-2))
+           :problem1-2
+           :problem2-1
+           :problem2-2))
 
 (defpackage :aoc-utils
   (:use :common-lisp)

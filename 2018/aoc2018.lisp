@@ -33,14 +33,21 @@
   (let ((two-count 0)
         (three-count 0))
     (with-open-file (in-stream input-path)
-      (do ((line (read-line in-stream) (read-line in-stream nil nil))) 
+      (do ((line (read-line in-stream) 
+                 (read-line in-stream 
+                            nil 
+                            nil))) 
           ((null line))
-        (let* ((letters (map 'list (lambda (x) x) line))
+        (let* ((letters (map 'list 
+                             (lambda (x) x) 
+                             line))
                (letter-hash (count-letters-in-word letters)))
           (if (contains-double-char letter-hash)
-              (setf two-count (+ two-count 1)))
+              (setf two-count 
+                    (+ two-count 1)))
           (if (contains-triple-char letter-hash)
-              (setf three-count (+ three-count 1))))))
+              (setf three-count 
+                    (+ three-count 1))))))
     (* two-count three-count)))
 
 (defun contains-double-char (letter-hash)
@@ -59,11 +66,29 @@
 (defun count-letters-in-word (letter-list)
   (let ((letter-hash (make-hash-table)))
     (mapcar (lambda (letter)
-              (multiple-value-bind (value present) (gethash letter letter-hash)
-                (cond ((null present) (setf (gethash letter letter-hash) 1))
-                      (t (setf (gethash letter letter-hash) (+ value 1)))))) 
+              (multiple-value-bind (value present) (gethash letter 
+                                                            letter-hash)
+                (cond ((null present) (setf (gethash letter 
+                                                     letter-hash) 1))
+                      (t (setf (gethash letter 
+                                        letter-hash) (+ value 1)))))) 
             letter-list)
     letter-hash))
 
-(defun problem2-2 (input-path))
-    
+(defun problem2-2 (input-path)
+  (let ((box-ids '()))
+    (with-open-file (in-stream input-path)
+      (do ((line (read-line in-stream) 
+                 (read-line in-stream 
+                            nil 
+                            nil))) 
+          ((null line))
+        (push line box-ids)))
+    (setf box-ids (nreverse box-ids))
+    (let ((id-length (length (first box-ids)))))))
+
+(defun strings-have-single-mismatch (string1 string2)
+  (let ((mismatch-forward (mismatch string1 string2))
+        (mismatch-backward (- (mismatch string1 string2 :from-end t) 1)))
+    (= mismatch-forward mismatch-backward)))
+  
