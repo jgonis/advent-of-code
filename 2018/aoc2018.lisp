@@ -84,8 +84,29 @@
                             nil))) 
           ((null line))
         (push line box-ids)))
-    (setf box-ids (nreverse box-ids))
-    (let ((id-length (length (first box-ids)))))))
+    (setf box-ids (nreverse box-ids)) ;;After reading in all the ids, reverse them so they are in the
+    (format t "~A~%"  (coerce (scan-id-list box-ids) 
+                              'string)))) ;;order we read them in.
+
+(defun scan-id-list (id-list)
+  (cond ((null id-list) nil)
+        (t (let ((result (find-id-match-against-list (car id-list) 
+                                                     (cdr id-list))))
+             (cond ((null result) (scan-id-list (cdr id-list)))
+                   (t result))))))
+(defun find-id-match-against-list (id id-list)
+  (cond ((null id-list) nil)
+        ((strings-have-single-mismatch id (car id-list))
+         (format t "~A ~A~%" id (car id-list))
+         (format t "~A~%" (intersection (aoc-utils:string->list id) 
+                                        (aoc-utils:string->list (car id-list))))
+         (remove-if-not (lambda (x) (alpha-char-p x))
+                        (mapcar (lambda (x y) (if (char= x y) 
+                                                  x
+                                                  #\Newline))
+                                (aoc-utils:string->list id)
+                                (aoc-utils:string->list (car id-list)))))
+        (t (find-id-match-against-list id (cdr id-list)))))
 
 (defun strings-have-single-mismatch (string1 string2)
   (let ((mismatch-forward (mismatch string1 string2))
