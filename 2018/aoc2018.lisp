@@ -8,12 +8,9 @@
 
 
 (defun problem1-2 (input-path)
-  (let ((freq-offsets '()))
-    (with-open-file (in-stream input-path)
-      (do ((line (read-line in-stream) (read-line in-stream nil nil)))
-          ((null line) nil)
-        (push (parse-integer line) freq-offsets)))
-    (setf freq-offsets (reverse freq-offsets))
+  (let ((freq-offsets '())
+        (input (aoc-utils:input->list input-path)))
+    (map-into input (lambda (x) (parse-integer x)) input)
     (setf (cdr (last freq-offsets)) freq-offsets)
     (problem1-2helper freq-offsets)))
 
