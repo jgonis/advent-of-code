@@ -60,21 +60,16 @@
               (multiple-value-bind (value present) (gethash letter 
                                                             letter-hash)
                 (cond ((null present) (setf (gethash letter 
-                                                     letter-hash) 1))
+                                                     letter-hash) 
+                                            1))
                       (t (setf (gethash letter 
-                                        letter-hash) (+ value 1)))))) 
+                                        letter-hash) 
+                               (+ value 1)))))) 
             letter-list)
     letter-hash))
 
 (defun problem2-2 (input-path)
-  (let ((box-ids '()))
-    (with-open-file (in-stream input-path)
-      (do ((line (read-line in-stream) 
-                 (read-line in-stream 
-                            nil 
-                            nil))) 
-          ((null line))
-        (push line box-ids)))
+  (let ((box-ids (aoc-utils:input->list input-path)))
     (setf box-ids (nreverse box-ids)) ;;After reading in all the ids, reverse them so they are in the
     (format t "~A~%"  (coerce (scan-id-list box-ids) 
                               'string)))) ;;order we read them in.
@@ -88,9 +83,6 @@
 (defun find-id-match-against-list (id id-list)
   (cond ((null id-list) nil)
         ((strings-have-single-mismatch id (car id-list))
-         (format t "~A ~A~%" id (car id-list))
-         (format t "~A~%" (intersection (aoc-utils:string->list id) 
-                                        (aoc-utils:string->list (car id-list))))
          (remove-if-not (lambda (x) (alpha-char-p x))
                         (mapcar (lambda (x y) (if (char= x y) 
                                                   x
