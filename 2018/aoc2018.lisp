@@ -6,13 +6,11 @@
       (setf freq (+ freq (parse-integer line))))
     freq))
 
-
 (defun problem1-2 (input-path)
-  (let ((freq-offsets '())
-        (input (aoc-utils:input->list input-path)))
+  (let ((input (aoc-utils:input->list input-path)))
     (map-into input (lambda (x) (parse-integer x)) input)
-    (setf (cdr (last freq-offsets)) freq-offsets)
-    (problem1-2helper freq-offsets)))
+    (setf (cdr (last input)) input)
+    (problem1-2helper input)))
 
 (defun problem1-2helper (offset-list)
   (let ((calculated-freqs (make-hash-table))
@@ -28,23 +26,19 @@
 
 (defun problem2-1 (input-path)
   (let ((two-count 0)
-        (three-count 0))
-    (with-open-file (in-stream input-path)
-      (do ((line (read-line in-stream) 
-                 (read-line in-stream 
-                            nil 
-                            nil))) 
-          ((null line))
-        (let* ((letters (map 'list 
-                             (lambda (x) x) 
-                             line))
-               (letter-hash (count-letters-in-word letters)))
-          (if (contains-double-char letter-hash)
-              (setf two-count 
-                    (+ two-count 1)))
-          (if (contains-triple-char letter-hash)
-              (setf three-count 
-                    (+ three-count 1))))))
+        (three-count 0)
+        (input (aoc-utils:input->list input-path)))
+    (dolist (line input)
+      (let* ((letters (map 'list 
+                           (lambda (x) x) 
+                           line))
+             (letter-hash (count-letters-in-word letters)))
+        (if (contains-double-char letter-hash)
+            (setf two-count 
+                  (+ two-count 1)))
+        (if (contains-triple-char letter-hash)
+            (setf three-count 
+                  (+ three-count 1)))))
     (* two-count three-count)))
 
 (defun contains-double-char (letter-hash)
