@@ -19,4 +19,5 @@
 (defpackage :aoc-utils
   (:use :common-lisp)
   (:export :make-growable-vector
-           :string->list))
+           :string->list
+           :input->list))

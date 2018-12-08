@@ -4,3 +4,11 @@
 
 (defun string->list (str)
   (map 'list (lambda (x) x) str))
+
+(defun input->list (input-path)
+  (let ((input '()))
+    (with-open-file (in-stream input-path)
+      (do ((line (read-line in-stream) (read-line in-stream nil nil)))
+          ((null line) input)
+        (push line input)))
+    (reverse input)))
