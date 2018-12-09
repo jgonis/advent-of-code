@@ -95,4 +95,53 @@
   (let ((mismatch-forward (mismatch string1 string2))
         (mismatch-backward (- (mismatch string1 string2 :from-end t) 1)))
     (= mismatch-forward mismatch-backward)))
+
+(defun problem3-1 (input-path)
+  (let ((input (aoc-utils:input->list input-path))
+        (coord-hash (make-hash-table :test 'equal))
+        (contested-count 0))
+    (dolist (line input)
+      (parse-p3 line coord-hash))
+    (with-hash-table-iterator (next coord-hash) 
+      (loop (multiple-value-bind (more? key value) (next)
+              (unless more? (return '()))
+              (if (>= value 2)
+                  (setf contested-count (+ contested-count 1))))))
+    contested-count))
+
+(defun parse-p3 (line coord-hash)
+  (let* ((start-coords-string (aoc-utils:trim-spaces (subseq line 
+                                                     (+ 1 (position #\@ line))
+                                                     (position #\: line))))
+         (start-size-string (aoc-utils:trim-spaces (subseq line
+                                                           (+ 1 (position #\: line))
+                                                           (length line))))
+         (start-x (parse-integer (subseq start-coords-string 
+                                                    0 
+                                                    (position #\, start-coords-string))))
+         (start-y (parse-integer (subseq start-coords-string 
+                                         (+ 1 (position #\, start-coords-string))
+                                         (length start-coords-string))))
+         (width (parse-integer (subseq start-size-string 
+                                       0
+                                       (position #\x start-size-string))))
+         (height (parse-integer (subseq start-size-string 
+                                        (+ 1 (position #\x start-size-string)) 
+                                        (length start-size-string)))))
+    (dotimes (x width)
+      (dotimes (y height)
+        (multiple-value-bind (value present?) (gethash (cons (+ x start-x) 
+                                                             (+ y start-y)) 
+                                                       coord-hash)
+          (cond ((null present?) (setf (gethash (cons (+ x start-x) 
+                                                      (+ y start-y)) 
+                                                coord-hash) 
+                                       1))
+                (t (setf (gethash (cons (+ x start-x) 
+                                        (+ y start-y)) 
+                                  coord-hash) 
+                         (+ value 1)))))))))
+
+(defun problem3-2 (input-path)
+  (let ((input (aoc-utils:input->list input-path)))))
   

@@ -14,10 +14,13 @@
   (:export :problem1-1
            :problem1-2
            :problem2-1
-           :problem2-2))
+           :problem2-2
+           :problem3-1
+           :problem3-2))
 
 (defpackage :aoc-utils
   (:use :common-lisp)
   (:export :make-growable-vector
            :string->list
-           :input->list))
+           :input->list
+           :trim-spaces))

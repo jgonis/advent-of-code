@@ -12,3 +12,6 @@
           ((null line) input)
         (push line input)))
     (reverse input)))
+
+(defun trim-spaces (in-string)
+  (string-trim '(#\Space) in-string))
