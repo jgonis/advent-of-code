@@ -177,3 +177,21 @@
               (if (and (stringp key) value)
                   (format t "~A~%" key)))))))
   
+(defun problem4-1 (input-path)
+  (let* ((input (aoc-utils:input->list input-path))
+         (sorted-input ())))
+  )
+
+(defun parse-time-string (line)
+  (let ((month 0)
+        (day 0)
+        (hour 0)
+        (minute 0))))
+
+(defun p4-sort (unsorted-lines)
+  (sort unsorted-lines 
+        (lambda (line1 line2)
+          (let ((line1-month (subseq (+ 1 (position #\- line1)) 
+                                     (position #\- )))
+                (line2-month ()))))))
+(defun problem4-2 (input-path))
