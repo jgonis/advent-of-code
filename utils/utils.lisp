@@ -36,3 +36,11 @@
 (defmethod generate-next-prime ((starting-from integer))
   (do ((current (+ starting-from 1) (1+ current)))
       ((is-prime? current) current)))
+
+(defgeneric generate-factor-list (integer-to-factor))
+(defmethod generate-factor-list ((integer-to-factor integer))
+  (let ((prime-list (generate-prime-list (ceiling (sqrt integer-to-factor))))
+        (factor-list (list)))
+    (do ((start integer-to-factor))
+        ((= start 1) factor-list)
+      ())))
