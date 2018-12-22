@@ -23,4 +23,7 @@
   (:export :make-growable-vector
            :string->list
            :input->list
-           :trim-spaces))
+           :trim-spaces
+           :is-prime?
+           :generate-prime-list
+           :generate-next-prime))
