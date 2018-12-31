@@ -25,5 +25,6 @@
            :input->list
            :trim-spaces
            :is-prime?
-           :generate-prime-list
-           :generate-next-prime))
+           :generate-prime-list-of-size
+           :generate-prime-list-up-to
+           :generate-prime-factor-list))
