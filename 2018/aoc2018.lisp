@@ -182,16 +182,28 @@
          (sorted-input ())))
   )
 
+(defclass p4-date-time () 
+  ((year :reader year)
+   (month :reader month)
+   (day :reader day)
+   (hour :reader hour)
+   (minute :reader minute)))
+
+(defmethod initialize-instance :after ((date-time p4-date-time) &key date-time-string)
+  (setf (slot-value date-time 'year) 1983)
+  (setf (slot-value date-time 'month) "May")
+  (setf (slot-value date-time 'day) 20)
+  (setf (slot-value date-time 'hour) 12)
+  (setf (slot-value date-time 'minute) 0))
+
+(defmethod print-object ((object p4-date-time) stream)
+  (format stream "jeff obj"))
+
 (defun parse-time-string (line)
   (let ((month 0)
         (day 0)
         (hour 0)
         (minute 0))))
 
-(defun p4-sort (unsorted-lines)
-  (sort unsorted-lines 
-        (lambda (line1 line2)
-          (let ((line1-month (subseq (+ 1 (position #\- line1)) 
-                                     (position #\- )))
-                (line2-month ()))))))
+
 (defun problem4-2 (input-path))

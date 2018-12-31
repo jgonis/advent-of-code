@@ -16,7 +16,10 @@
            :problem2-1
            :problem2-2
            :problem3-1
-           :problem3-2))
+           :problem3-2
+           :problem4-1
+           :problem4-2
+           :p4-date-time))
 
 (defpackage :aoc-utils
   (:use :common-lisp)
