@@ -72,8 +72,8 @@
 
 (defun problem2-2 (input-path)
   (let ((box-ids (aoc-utils:input->list input-path)))
-    (setf box-ids (nreverse box-ids)) ;;After reading in all the ids, reverse them so they are in the
-    (format t "~A~%"  (coerce (scan-id-list box-ids) 
+    (setf box-ids (nreverse box-ids)) ;;After reading in all the ids, 
+    (format t "~A~%"  (coerce (scan-id-list box-ids) ;; reverse them so they are in the
                               'string)))) ;;order we read them in.
 
 (defun scan-id-list (id-list)
@@ -141,7 +141,13 @@
           (multiple-value-bind (value present?) (gethash (cons x-coord 
                                                                y-coord) 
                                                          coord-hash)
-            (funcall set-fabric-coord-func x-coord y-coord claim-id value present? coord-hash)))))))
+            (funcall set-fabric-coord-func 
+                     x-coord 
+                     y-coord 
+                     claim-id 
+                     value 
+                     present? 
+                     coord-hash)))))))
 
 (defun fabric-coord-func (x-coord y-coord claim-id value present? coord-hash)
   (declare (ignore claim-id))
