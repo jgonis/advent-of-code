@@ -202,8 +202,13 @@
   (setf (slot-value date-time 'hour) 12)
   (setf (slot-value date-time 'minute) 0))
 
-(defmethod print-object ((object p4-date-time) stream)
-  (format stream "jeff obj"))
+(defmethod print-object ((date-time-object p4-date-time) stream)
+  (format t "~4,'0d-~2,'0d-~2,'0d ~2,'0d:~2,'0d" 
+          (year date-time-object) 
+          (month date-time-object) 
+          (day date-time-object) 
+          (hour date-time-object)
+          (minute date-time-object)))
 
 (defun parse-time-string (line)
   (let ((month 0)
