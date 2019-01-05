@@ -18,8 +18,7 @@
            :problem3-1
            :problem3-2
            :problem4-1
-           :problem4-2
-           :p4-date-time))
+           :problem4-2))
 
 (defpackage :aoc-utils
   (:use :common-lisp)
@@ -30,4 +29,10 @@
            :is-prime?
            :generate-prime-list-of-size
            :generate-prime-list-up-to
-           :generate-prime-factor-list))
+           :generate-prime-factor-list
+           :p4-date-time
+           :year
+           :month
+           :day
+           :hour
+           :minute))
