@@ -27,14 +27,15 @@
   (setf (slot-value date-time 'minute) minute))
 
 (defmethod initialize-instance :after ((date-time p4-date-time) &key date-time-string)
-  (setf (year date-time) 1983)
-  (setf (month date-time) 5)
-  (setf (day date-time) 20)
-  (setf (hour date-time) 12)
-  (setf (minute date-time) 0))
+  (multiple-value-bind (y mon d h min) (parse-time-string date-time-string)
+    (setf (year date-time) y)
+    (setf (month date-time) mon)
+    (setf (day date-time) d)
+    (setf (hour date-time) h)
+    (setf (minute date-time) min)))
 
 (defmethod print-object ((date-time-object p4-date-time) stream)
-  (format t "~4,'0d-~2,'0d-~2,'0d ~2,'0d:~2,'0d~%" 
+  (format stream "~4,'0d-~2,'0d-~2,'0d ~2,'0d:~2,'0d~%" 
           (if (slot-boundp date-time-object 'year) 
               (year date-time-object)
               "No year set") 
@@ -59,14 +60,19 @@
                              (+ (position #\Space line) 1) 
                              (length line))))
     
-    (let ((year (subseq date-string 
-                        0 
-                        (position #\- date-string)))
-          (month (subseq date-string 
-                         (+ (position #\- date-string) 1) 
-                         (position #\- date-string :from-end t)))
-          (day (subseq date-string 
-                       (+ (position #\- date-string :from-end t) 1)
-                       (length date-string))))
-      (format t "year: ~A month: ~A day: ~A~%" year month day)
-      (format t "~A~%" time-string))))
+    (let ((year (parse-integer (subseq date-string 
+                                       0 
+                                       (position #\- date-string))))
+          (month (parse-integer (subseq date-string 
+                                        (+ (position #\- date-string) 1) 
+                                        (position #\- date-string :from-end t))))
+          (day (parse-integer (subseq date-string 
+                                      (+ (position #\- date-string :from-end t) 1)
+                                      (length date-string))))
+          (hour (parse-integer (subseq time-string 
+                                       0 
+                                       (position #\: time-string))))
+          (minute (parse-integer (subseq time-string 
+                                         (+ (position #\: time-string) 1) 
+                                         (length time-string)))))
+      (values year month day hour minute))))
