@@ -6,6 +6,9 @@
    (hour :reader hour)
    (minute :reader minute)))
 
+(defun make-date-time (date-time-string)
+  (make-instance 'p4-date-time :date-time-string date-time-string))
+
 (defgeneric (setf year) (year date-time))
 (defmethod (setf year) ((year integer) (date-time p4-date-time))
   (setf (slot-value date-time 'year) year))
@@ -76,3 +79,12 @@
                                          (+ (position #\: time-string) 1) 
                                          (length time-string)))))
       (values year month day hour minute))))
+
+(defgeneric less-than (date-time-1 date-time-2))
+(defmethod less-than ((date-time-1 p4-date-time) (date-time-2 p4-date-time))
+  (cond  ((>= (year date-time-1) (year date-time-2)) nil)
+         ((>= (month date-time-1) (month date-time-2)) nil)
+         ((>= (day date-time-1) (day date-time-2)) nil)
+         ((>= (hour date-time-1) (hour date-time-2)) nil)
+         ((>= (minute date-time-1) (minute date-time-2)) nil)
+         (t t)))

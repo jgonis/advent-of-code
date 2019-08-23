@@ -184,8 +184,10 @@
                   (format t "~A~%" key)))))))
   
 (defun problem4-1 (input-path)
-  (let* ((input (aoc-utils:input->list input-path))
-         (sorted-input ())))
-  )
+  (flet ((parse-date-time (dt-string)
+           (let*)))
+      (let* ((input (aoc-utils:input->list input-path))
+             (sorted-input ()))
+        )))
 
 (defun problem4-2 (input-path))

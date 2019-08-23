@@ -30,7 +30,7 @@
            :generate-prime-list-of-size
            :generate-prime-list-up-to
            :generate-prime-factor-list
-           :p4-date-time
+           :make-date-time
            :year
            :month
            :day
