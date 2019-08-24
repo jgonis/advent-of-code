@@ -31,6 +31,7 @@
            :generate-prime-list-up-to
            :generate-prime-factor-list
            :make-date-time
+           :less-than
            :year
            :month
            :day
