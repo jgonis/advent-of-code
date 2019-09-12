@@ -14,14 +14,16 @@
 
 (defun problem3-2 (input-path)
   (let ((input (aoc-utils:input->list input-path))
-        (coord-hash (make-hash-table :test 'equal)))
+        (coord-hash (make-hash-table :test 'equal))
+        (result 0))
     (dolist (line input)
       (parse-p3 line coord-hash #'fabric-id-coord-func))
     (with-hash-table-iterator (next coord-hash)
       (loop (multiple-value-bind (more? key value) (next)
               (unless more? (return '()))
               (if (and (stringp key) value)
-                  (format t "~A~%" key)))))))
+                  (setf result key)))))
+    result))
 
 (defun parse-p3 (line coord-hash set-fabric-coord-func)
   (let* ((claim-id (aoc-utils:trim-spaces (subseq line

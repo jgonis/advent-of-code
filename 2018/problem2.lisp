@@ -19,8 +19,8 @@
 (defun problem2-2 (input-path)
   (let ((box-ids (aoc-utils:input->list input-path)))
     (setf box-ids (nreverse box-ids)) ;;After reading in all the ids,
-    (format t "~A~%"  (coerce (scan-id-list box-ids) ;; reverse them so they are in the
-                              'string)))) ;;order we read them in.
+    (coerce (scan-id-list box-ids) ;; reverse them so they are in the
+            'string))) ;;order we read them in.
 
 (defun contains-double-char (letter-hash)
   (contains-char-count letter-hash 2))
