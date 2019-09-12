@@ -1,0 +1,26 @@
+(in-package :advent-of-code-2018)
+(defun problem1-1 (input-path)
+  (let ((freq 0)
+        (input (aoc-utils:input->list input-path)))
+    (dolist (line input)
+      (setf freq (+ freq (parse-integer line))))
+    freq))
+
+(defun problem1-2 (input-path)
+  (let ((input (aoc-utils:input->list input-path)))
+    (map-into input (lambda (x) (parse-integer x)) input)
+    (setf (cdr (last input)) input)
+    (problem1-2helper input)))
+
+(defun problem1-2helper (offset-list)
+  (let ((calculated-freqs (make-hash-table))
+        (current-freq 0))
+    (dolist (offset offset-list)
+      (setf current-freq (+ offset current-freq))
+      (multiple-value-bind (value present) (gethash current-freq
+                                                    calculated-freqs)
+        (declare (ignore value))
+        (cond (present (return current-freq))
+              (t (setf (gethash current-freq
+                                calculated-freqs)
+                       current-freq)))))))

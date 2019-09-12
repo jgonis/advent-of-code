@@ -25,6 +25,7 @@
   (:export :make-growable-vector
            :string->list
            :input->list
+           :list->output
            :trim-spaces
            :is-prime?
            :generate-prime-list-of-size

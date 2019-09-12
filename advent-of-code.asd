@@ -25,4 +25,22 @@
                         :depends-on ("packages" 
                                      utils)
                         :serial t
-                        :components ((:file "aoc2018")))))
+                        :components ((:file "problem1")
+                                     (:file "problem2")
+                                     (:file "problem3")
+                                     (:file "problem4")))))
+
+(defsystem :advent-of-code/test
+  :description "Test suite for the advent of code"
+  :license "LGPL 3.0"
+  :author "Jeff Gonis"
+  :depends-on (:advent-of-code 
+               :1am
+               :cl-utilities)
+  :serial t
+  :components ((:file "packages.test")
+               (:module "tests"
+                        :serial t
+                        :components ((:file "tests"))))
+  :perform (asdf:test-op (op system)
+             (funcall (read-from-string "advent-of-code.test:run-tests"))))
