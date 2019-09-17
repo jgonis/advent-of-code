@@ -14,87 +14,28 @@
                (next-state (handle-input current-state 
                                          input
                                          parsed-shifts)))
+          (let ((dt (date-time input)))
+            (if (= (aoc-utils:hour dt) 23)
+                (format t "month: ~A day: ~A~%" (aoc-utils:month dt) (aoc-utils:day dt))))
           (setf current-state next-state)))
       (handle-input current-state 
                     (make-instance 'eof-input)
                     parsed-shifts))
     (format t "~A~%" parsed-shifts)))
 
-(defclass shift-record-state () ())
-;;  ((guard-number :initarg :guard-number 
-;;                 :accessor guard-number)
-;;   (shift-date :initarg :shift-date 
-;;               :accessor shift-date)
-;;   (asleep-awake-log :initarg :log 
-;;                     :accessor asleep-awake-log)
-;;   (state-start-minute :initarg :start-minute
-;;                       :accessor start-minute)))
+(defclass shift-record-state ()
+  ((guard-number :initarg :guard-number 
+                 :accessor guard-number)
+   (shift-date :initarg :shift-date 
+               :accessor shift-date)
+   (asleep-awake-log :initarg :log 
+                     :accessor asleep-awake-log)
+   (state-start-minute :initarg :start-minute
+                       :accessor start-minute)))
 (defclass guard-state (shift-record-state) ())
 (defclass asleep-state (shift-record-state) ())
 (defclass awake-state (shift-record-state) ())
 (defclass initial-state () ())
-
-(defgeneric handle-input (state input shift-collection))
-(defmethod handle-input ((state initial-state) 
-                         (input guard-input)
-                         shift-collection)
-  (format t "Creating Guard ~A State~%" (guard-id input))
-  (make-instance 'guard-state))
-(defmethod handle-input ((state initial-state) 
-                         (input eof-input)
-                         shift-collection)
-  (format t "Empty file of input~%"))
-
-(defmethod handle-input ((state asleep-state)
-                         (input guard-input)
-                         shift-collection)
-  (format t "Ending sleep, starting new shift for guard ~A~%" (guard-id input))
-  (make-instance 'guard-state))
-
-(defmethod handle-input ((state asleep-state)
-                         (input wake-up-input)
-                         shift-collection)
-  (format t "creating awake-state~%")
-  (make-instance 'awake-state))
-
-(defmethod handle-input ((state asleep-state)
-                         (input eof-input)
-                         shift-collection)
-  (format t "done parsing!~%"))
-
-(defmethod handle-input ((state awake-state)
-                         (input guard-input)
-                         shift-collection)
-  (format t "Ending shift awake, starting new shift for guard ~A~%" (guard-id input))
-  (make-instance 'guard-state))
-
-(defmethod handle-input ((state awake-state)
-                         (input fall-asleep-input)
-                         shift-collection)
-  (format t "falling asleep now~%")
-  (make-instance 'asleep-state))
-
-(defmethod handle-input ((state awake-state)
-                         (input eof-input)
-                         shift-collection)
-  (format t "done parsing!~%"))
-
-(defmethod handle-input ((state guard-state) 
-                         (input guard-input)
-                         shift-collection)
-  (format t "Finished guard-shift, starting new shift for guard ~A~%"(guard-id input))
-  (make-instance 'guard-state))
-
-(defmethod handle-input ((state guard-state) 
-                         (input fall-asleep-input)
-                         shift-collection)
-  (format t "falling asleep~%")
-  (make-instance 'asleep-state))
-
-(defmethod handle-input ((state guard-state) 
-                         (input eof-input)
-                         shift-collection)
-  (format t "done parsing!~%"))
 
 (defclass p4-input ()
   ((date-time :initarg :date-time :accessor date-time)))
@@ -105,6 +46,68 @@
 (defclass wake-up-input (p4-input) 
   ())
 (defclass eof-input () ())
+
+(defgeneric handle-input (state input shift-collection))
+(defmethod handle-input ((state initial-state) 
+                         (input guard-input)
+                         shift-collection)
+;;  (format t "Creating Guard ~A State~%" (guard-id input))
+  (make-instance 'guard-state))
+(defmethod handle-input ((state initial-state) 
+                         (input eof-input)
+                         shift-collection)
+  (format t "Empty file of input~%"))
+
+(defmethod handle-input ((state asleep-state)
+                         (input guard-input)
+                         shift-collection)
+;  (format t "Ending sleep, starting new shift for guard ~A~%" (guard-id input))
+  (make-instance 'guard-state))
+
+(defmethod handle-input ((state asleep-state)
+                         (input wake-up-input)
+                         shift-collection)
+ ; (format t "creating awake-state~%")
+  (make-instance 'awake-state))
+
+(defmethod handle-input ((state asleep-state)
+                         (input eof-input)
+                         shift-collection)
+  (format t "done parsing!~%"))
+
+(defmethod handle-input ((state awake-state)
+                         (input guard-input)
+                         shift-collection)
+;  (format t "Ending shift awake, starting new shift for guard ~A~%" (guard-id input))
+  (make-instance 'guard-state))
+
+(defmethod handle-input ((state awake-state)
+                         (input fall-asleep-input)
+                         shift-collection)
+ ; (format t "falling asleep now~%")
+  (make-instance 'asleep-state))
+
+(defmethod handle-input ((state awake-state)
+                         (input eof-input)
+                         shift-collection)
+  (format t "done parsing!~%"))
+
+(defmethod handle-input ((state guard-state) 
+                         (input guard-input)
+                         shift-collection)
+  ;(format t "Finished guard-shift, starting new shift for guard ~A~%"(guard-id input))
+  (make-instance 'guard-state))
+
+(defmethod handle-input ((state guard-state) 
+                         (input fall-asleep-input)
+                         shift-collection)
+  ;(format t "falling asleep~%")
+  (make-instance 'asleep-state))
+
+(defmethod handle-input ((state guard-state) 
+                         (input eof-input)
+                         shift-collection)
+  (format t "done parsing!~%"))
 
 (defun make-input (input-line)
   (let* ((date-string (subseq input-line 1 (position #\] input-line)))
