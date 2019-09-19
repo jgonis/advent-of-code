@@ -31,10 +31,4 @@
            :generate-prime-list-of-size
            :generate-prime-list-up-to
            :generate-prime-factor-list
-           :make-date-time
-           :less-than
-           :year
-           :month
-           :day
-           :hour
-           :minute))
+           :make-date-time))

@@ -6,7 +6,7 @@
                                                   (date-string-2 (subseq line2 1 (position #\] line2)))
                                                   (date-obj1 (aoc-utils:make-date-time date-string-1))
                                                   (date-obj2 (aoc-utils:make-date-time date-string-2)))
-                                             (aoc-utils:less-than date-obj1 date-obj2)))))
+                                             (local-time:timestamp< date-obj1 date-obj2)))))
          (parsed-shifts (make-hash-table)))
     (let ((current-state (make-instance 'initial-state)))
       (dolist (line sorted-lines)
@@ -15,8 +15,22 @@
                                          input
                                          parsed-shifts)))
           (let ((dt (date-time input)))
-            (if (= (aoc-utils:hour dt) 23)
-                (format t "month: ~A day: ~A~%" (aoc-utils:month dt) (aoc-utils:day dt))))
+            (if (= (local-time:timestamp-hour dt) 23)
+                (progn 
+                  (format t "~A:~A mon: ~A day: ~A~%" 
+                          (local-time:timestamp-hour dt)
+                          (local-time:timestamp-minute dt)
+                          (local-time:timestamp-month dt)
+                          (local-time:timestamp-day dt))
+                  (setf (date-time input) (local-time:adjust-timestamp dt 
+                                            (offset :day 1) 
+                                            (set :hour 0) 
+                                            (set :minute 0)))
+                  (format t "~A:~A mon: ~A day: ~A~%~%" 
+                          (local-time:timestamp-hour (date-time input))
+                          (local-time:timestamp-minute (date-time input))
+                          (local-time:timestamp-month (date-time input))
+                          (local-time:timestamp-day (date-time input))))))
           (setf current-state next-state)))
       (handle-input current-state 
                     (make-instance 'eof-input)
@@ -51,8 +65,8 @@
 (defmethod handle-input ((state initial-state) 
                          (input guard-input)
                          shift-collection)
-;;  (format t "Creating Guard ~A State~%" (guard-id input))
   (make-instance 'guard-state))
+
 (defmethod handle-input ((state initial-state) 
                          (input eof-input)
                          shift-collection)
@@ -61,13 +75,11 @@
 (defmethod handle-input ((state asleep-state)
                          (input guard-input)
                          shift-collection)
-;  (format t "Ending sleep, starting new shift for guard ~A~%" (guard-id input))
   (make-instance 'guard-state))
 
 (defmethod handle-input ((state asleep-state)
                          (input wake-up-input)
                          shift-collection)
- ; (format t "creating awake-state~%")
   (make-instance 'awake-state))
 
 (defmethod handle-input ((state asleep-state)
@@ -78,13 +90,11 @@
 (defmethod handle-input ((state awake-state)
                          (input guard-input)
                          shift-collection)
-;  (format t "Ending shift awake, starting new shift for guard ~A~%" (guard-id input))
   (make-instance 'guard-state))
 
 (defmethod handle-input ((state awake-state)
                          (input fall-asleep-input)
                          shift-collection)
- ; (format t "falling asleep now~%")
   (make-instance 'asleep-state))
 
 (defmethod handle-input ((state awake-state)
@@ -95,13 +105,11 @@
 (defmethod handle-input ((state guard-state) 
                          (input guard-input)
                          shift-collection)
-  ;(format t "Finished guard-shift, starting new shift for guard ~A~%"(guard-id input))
   (make-instance 'guard-state))
 
 (defmethod handle-input ((state guard-state) 
                          (input fall-asleep-input)
                          shift-collection)
-  ;(format t "falling asleep~%")
   (make-instance 'asleep-state))
 
 (defmethod handle-input ((state guard-state) 
@@ -129,24 +137,4 @@
                                                       :date-time date-time))
           (t (error "input line is not recognized: ~A" input-line)))))
 
-(defun make-p4-record (shift-start-line)
-  (let* ((date-string (subseq shift-start-line 1 (position #\] shift-start-line)))
-         (date-time (aoc-utils:make-date-time date-string))
-         (shift-start-date (concatenate 'string 
-                                        (write-to-string (aoc-utils:month date-time)) 
-                                        "-" 
-                                        (cond ((= 23 (aoc-utils:hour date-time)) 
-                                               (format nil "~2,'0d" (+ 1 (aoc-utils:day date-time))))
-                                              (t (format nil "~2,'0d" (aoc-utils:day date-time))))))
-         (guard-id (subseq shift-start-line 
-                           (+ (position #\# shift-start-line) 1)
-                           (position #\Space 
-                                     shift-start-line 
-                                     :start (position #\# shift-start-line)))))
-    (list shift-start-date guard-id (make-list 60 :initial-element #\.))))
 
-(defun print-p4-record (p4-record)
-  (format t "~A #~A ~{~A~}~%" 
-          (car p4-record) 
-          (car (cdr p4-record)) 
-          (car (cdr (cdr p4-record)))))

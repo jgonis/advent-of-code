@@ -1,60 +1,10 @@
 (in-package :aoc-utils)
-(defclass p4-date-time () 
-  ((year :reader year)
-   (month :reader month)
-   (day :reader day)
-   (hour :reader hour)
-   (minute :reader minute)))
 
 (defun make-date-time (date-time-string)
-  (make-instance 'p4-date-time :date-time-string date-time-string))
-
-(defgeneric (setf year) (year date-time))
-(defmethod (setf year) ((year integer) (date-time p4-date-time))
-  (setf (slot-value date-time 'year) year))
-
-(defgeneric (setf month) (month date-time))
-(defmethod (setf month) ((month integer) (date-time p4-date-time))
-  (setf (slot-value date-time 'month) month))
-
-(defgeneric (setf day) (day date-time))
-(defmethod (setf day) ((day integer) (date-time p4-date-time))
-  (setf (slot-value date-time 'day) day))
-
-(defgeneric (setf hour) (hour date-time))
-(defmethod (setf hour) ((hour integer) (date-time p4-date-time))
-  (setf (slot-value date-time 'hour) hour))
-
-(defgeneric (setf minute) (minute date-time))
-(defmethod (setf minute) ((minute integer) (date-time p4-date-time))
-  (setf (slot-value date-time 'minute) minute))
-
-(defmethod initialize-instance :after ((date-time p4-date-time) &key date-time-string)
   (multiple-value-bind (y mon d h min) (parse-time-string date-time-string)
-    (setf (year date-time) y)
-    (setf (month date-time) mon)
-    (setf (day date-time) d)
-    (setf (hour date-time) h)
-    (setf (minute date-time) min)))
-
-(defmethod print-object ((date-time-object p4-date-time) stream)
-  (format stream "~4,'0d-~2,'0d-~2,'0d ~2,'0d:~2,'0d~%" 
-          (if (slot-boundp date-time-object 'year) 
-              (year date-time-object)
-              "No year set") 
-          (if (slot-boundp date-time-object 'month) 
-              (month date-time-object)
-              "No month set") 
-          (if (slot-boundp date-time-object 'day) 
-              (day date-time-object)
-              "No day set") 
-          (if (slot-boundp date-time-object 'hour) 
-              (hour date-time-object)
-              "No hour set")
-          (if (slot-boundp date-time-object 'minute) 
-              (minute date-time-object)
-              "No minute set")))
-
+    (local-time:encode-timestamp 0 0 min h d mon y)))
+;  (make-instance 'p4-date-time :date-time-string date-time-string)
+    
 (defun parse-time-string (line)
   (let ((date-string (subseq line 
                              0 
@@ -79,16 +29,3 @@
                                          (+ (position #\: time-string) 1) 
                                          (length time-string)))))
       (values year month day hour minute))))
-
-(defgeneric less-than (date-time-1 date-time-2))
-(defmethod less-than ((date-time-1 p4-date-time) (date-time-2 p4-date-time))
-  (cond ((< (year date-time-1) (year date-time-2)) t)
-        ((> (year date-time-1) (year date-time-2)) nil)
-        (t (cond ((< (month date-time-1) (month date-time-2)) t)
-                 ((> (month date-time-1) (month date-time-2)) nil)
-                 (t (cond ((< (day date-time-1) (day date-time-2)) t)
-                          ((> (day date-time-1) (day date-time-2)) nil)
-                          (t (cond ((< (hour date-time-1) (hour date-time-2)) t)
-                                   ((> (hour date-time-1) (hour date-time-2)) nil)
-                                   (t (cond ((< (minute date-time-1) (minute date-time-2)) t)
-                                            ((>= (minute date-time-1) (minute date-time-2)) nil)))))))))))
