@@ -1,4 +1,4 @@
-(defpackage :advent-of-code.test
+(defpackage :advent-of-code.tests
   (:use :cl 
         :1am 
         :cl-utilities)

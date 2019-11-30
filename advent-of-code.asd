@@ -31,7 +31,7 @@
                                      (:file "problem3")
                                      (:file "problem4")))))
 
-(defsystem :advent-of-code/test
+(defsystem :advent-of-code/tests
   :description "Test suite for the advent of code"
   :license "LGPL 3.0"
   :author "Jeff Gonis"
@@ -42,6 +42,12 @@
   :components ((:file "packages.test")
                (:module "tests"
                         :serial t
-                        :components ((:file "tests"))))
+                        :components ((:file "tests")))
+               (:module "utils/tests"
+                        :serial t
+                        :components ((:file "utiltests")))
+               (:module "2018/tests"
+                        :serial t
+                        :components ((:file "p4tests"))))
   :perform (asdf:test-op (op system)
-             (funcall (read-from-string "advent-of-code.test:run-tests"))))
+             (funcall (read-from-string "advent-of-code.tests:run-tests"))))

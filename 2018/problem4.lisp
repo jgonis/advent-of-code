@@ -1,12 +1,18 @@
 (in-package :advent-of-code-2018)
 (defun problem4-1 (input-path)
   (let* ((input-lines (aoc-utils:input->list input-path))
-         (sorted-lines (sort input-lines (lambda (line1 line2) 
-                                           (let* ((date-string-1 (subseq line1 1 (position #\] line1)))
-                                                  (date-string-2 (subseq line2 1 (position #\] line2)))
-                                                  (date-obj1 (aoc-utils:make-date-time date-string-1))
-                                                  (date-obj2 (aoc-utils:make-date-time date-string-2)))
-                                             (local-time:timestamp< date-obj1 date-obj2)))))
+         (sorted-lines 
+          (sort input-lines 
+                (lambda (line1 line2) 
+                  (let* ((date-string-1 (subseq line1 
+                                                1 
+                                                (position #\] line1)))
+                         (date-string-2 (subseq line2 
+                                                1 
+                                                (position #\] line2)))
+                         (date-obj1 (aoc-utils:make-date-time date-string-1))
+                         (date-obj2 (aoc-utils:make-date-time date-string-2)))
+                    (local-time:timestamp< date-obj1 date-obj2)))))
          (parsed-shifts (make-hash-table)))
     (let ((current-state (make-instance 'initial-state)))
       (dolist (line sorted-lines)

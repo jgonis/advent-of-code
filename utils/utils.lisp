@@ -23,3 +23,6 @@
 
 (defun trim-spaces (in-string)
   (string-trim '(#\Space) in-string))
+
+(defun extract-string-between ()
+  (* 2 2))
