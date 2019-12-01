@@ -29,7 +29,12 @@
                         :components ((:file "problem1")
                                      (:file "problem2")
                                      (:file "problem3")
-                                     (:file "problem4")))))
+                                     (:file "problem4")))
+               (:module "2019"
+                        :depends-on ("packages"
+                                     utils)
+                        :serial t
+                        :components ((:file "problem1")))))
 
 (defsystem :advent-of-code/tests
   :description "Test suite for the advent of code"
@@ -48,6 +53,11 @@
                         :components ((:file "utiltests")))
                (:module "2018/tests"
                         :serial t
-                        :components ((:file "p4tests"))))
-  :perform (asdf:test-op (op system)
-             (funcall (read-from-string "advent-of-code.tests:run-tests"))))
+                        :components ((:file "p4tests")))
+               (:module "2019/tests"
+                        :serial t
+                        :components ((:file "2019tests"))))
+  :perform (asdf:test-op 
+            (op system)
+            (funcall (read-from-string 
+                      "advent-of-code.tests:run-tests"))))

@@ -20,6 +20,13 @@
            :problem4-1
            :problem4-2))
 
+(defpackage :advent-of-code-2019
+  (:nicknames :aoc-19)
+  (:use :common-lisp)
+  (:export :problem1-1
+           :problem1-2))
+
+
 (defpackage :aoc-utils
   (:use :common-lisp)
   (:export :make-growable-vector
