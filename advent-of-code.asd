@@ -4,7 +4,8 @@
   :author "Jeff Gonis <jeffgonis@fastmail.com>"
   :licence "AGPL 3.0"
   :depends-on (:alexandria 
-               :local-time)
+               :local-time
+               :cl-utilities)
   :components ((:file "packages")
                (:module "utils"
                         :depends-on ("packages")
@@ -34,7 +35,8 @@
                         :depends-on ("packages"
                                      utils)
                         :serial t
-                        :components ((:file "problem1")))))
+                        :components ((:file "problem1")
+                                     (:file "problem2")))))
 
 (defsystem :advent-of-code/tests
   :description "Test suite for the advent of code"

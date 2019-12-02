@@ -19,3 +19,14 @@
     (is (= (aoc-19::problem1-helper 100756 :include-fuel t) 50346))
     (is (= (aoc-19:problem1-2 p1path) 4943969))))
 
+(test problem2-1
+  (let ((p2path (merge-pathnames 
+                 #P"local-projects/advent-of-code/2019/p2input.txt"
+                 ql:*quicklisp-home*)))
+    (is (= (aoc-19:problem2-1 p2path) 1))))
+
+(test problem2-2
+  (let ((p2path (merge-pathnames 
+                 #P"local-projects/advent-of-code/2019/p2input.txt"
+                 ql:*quicklisp-home*)))
+    (is (= (aoc-19:problem2-2 p2path) 2))))
