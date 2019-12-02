@@ -36,7 +36,8 @@
                                      utils)
                         :serial t
                         :components ((:file "problem1")
-                                     (:file "problem2")))))
+                                     (:file "problem2")
+                                     (:file "problem3")))))
 
 (defsystem :advent-of-code/tests
   :description "Test suite for the advent of code"
