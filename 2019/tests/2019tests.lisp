@@ -23,10 +23,10 @@
   (let ((p2path (merge-pathnames 
                  #P"local-projects/advent-of-code/2019/p2input.txt"
                  ql:*quicklisp-home*)))
-    (is (= (aoc-19:problem2-1 p2path) 1))))
+    (is (= (aoc-19:problem2-1 p2path) 19690720))))
 
 (test problem2-2
   (let ((p2path (merge-pathnames 
                  #P"local-projects/advent-of-code/2019/p2input.txt"
                  ql:*quicklisp-home*)))
-    (is (= (aoc-19:problem2-2 p2path) 2))))
+    (is (= (aoc-19:problem2-2 p2path) 4259))))

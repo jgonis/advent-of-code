@@ -12,7 +12,7 @@
          (verb-values (alexandria:iota 100)))
     (dolist (noun-value noun-values)
       (dolist (verb-value verb-values)
-        (let ((op-codes-copy (copy-list op-codes)))
+        (let ((op-codes-copy (copy-seq op-codes)))
           (setf (elt op-codes-copy 1) noun-value)
           (setf (elt op-codes-copy 2) verb-value)
           (program-runner op-codes-copy)
@@ -21,33 +21,31 @@
                 (+ (* 100 noun-value) verb-value))))))))
 
 (defun parsing-helper (input-path)
-  (let* ((input-line (aoc-utils:input->list input-path))
-         (input-strings (cl-utilities:split-sequence #\, 
-                                                     (car input-line)))
-         (input-numbers (map 'list
+  (let* ((input-line (aoc-utils:input->vec input-path))
+         (input-strings (cl-utilities:split-sequence 
+                         #\, 
+                         (elt input-line 0)))
+         (input-numbers (map 'array
                              #'parse-integer
                              input-strings)))
     input-numbers))
 
 (defun program-runner (op-codes)
-  (labels ((helper (op-codes current-idx)
-             (let ((op-code (elt op-codes current-idx)))
-               (cond ((= op-code 99) op-codes)
-                     ((= op-code 1) (do-op op-codes 
-                                      current-idx
-                                      #'+)
-                      (helper op-codes (+ current-idx 4)))
-                     ((= op-code 2) (do-op op-codes
-                                      current-idx
-                                      #'*)
-                      (helper op-codes (+ current-idx 4)))
-                     (t (error "unknown opcode ~A~%" 
-                               op-code)))))
-           (do-op (op-codes idx operation)
-             (let* ((operand-1 (elt op-codes (elt op-codes (+ idx 1))))
-                    (operand-2 (elt op-codes (elt op-codes (+ idx 2))))
-                    (result-location (elt op-codes (+ idx 3)))
-                    (op-result (funcall operation operand-1 operand-2)))
-               (setf (elt op-codes result-location)
-                     op-result))))
-    (helper op-codes 0)))
+  (let ((add-op (make-instance 'add-op))
+        (multiply-op (make-instance 'multiply-op)))
+      (labels ((helper (op-codes current-idx)
+                 (let ((op-code (elt op-codes current-idx)))
+                   (cond ((= op-code 99) op-codes)
+                         ((= op-code 1) (handle-op add-op
+                                                   op-codes
+                                                   current-idx)
+                          (helper op-codes (increment-pc add-op
+                                                         current-idx)))
+                         ((= op-code 2) (handle-op multiply-op
+                                                   op-codes
+                                                   current-idx)
+                          (helper op-codes (increment-pc multiply-op
+                                                         current-idx)))
+                         (t (error "unknown opcode ~A~%" 
+                                   op-code))))))
+        (helper op-codes 0))))

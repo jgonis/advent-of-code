@@ -13,6 +13,15 @@
         (push line input)))
     (nreverse input)))
 
+(defun input->vec (input-path)
+  (let ((input '()))
+    (with-open-file (in-stream input-path)
+      (do ((line (read-line in-stream) (read-line in-stream nil nil)))
+          ((null line) input)
+        (push line input)))
+    (make-array (length input) 
+                :initial-contents (nreverse input))))
+
 (defun list->output (lst output-path)
   (with-open-file (out-stream output-path 
                               :direction :output 

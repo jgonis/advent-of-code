@@ -35,7 +35,8 @@
                         :depends-on ("packages"
                                      utils)
                         :serial t
-                        :components ((:file "problem1")
+                        :components ((:file "intcode")
+                                     (:file "problem1")
                                      (:file "problem2")
                                      (:file "problem3")))))
 

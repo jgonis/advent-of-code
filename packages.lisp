@@ -28,7 +28,8 @@
            :problem2-1
            :problem2-2
            :problem3-1
-           :problem3-2))
+           :problem3-2
+           :run-program))
 
 
 (defpackage :aoc-utils
@@ -36,6 +37,7 @@
   (:export :make-growable-vector
            :string->list
            :input->list
+           :input->vec
            :list->output
            :trim-spaces
            :is-prime?
