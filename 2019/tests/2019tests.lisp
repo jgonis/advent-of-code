@@ -30,3 +30,27 @@
                  #P"local-projects/advent-of-code/2019/p2input.txt"
                  ql:*quicklisp-home*)))
     (is (= (aoc-19:problem2-2 p2path) 4259))))
+
+(test problem3-1
+  (let ((p3path (merge-pathnames 
+                 #P"local-projects/advent-of-code/2019/p3input.txt"
+                 ql:*quicklisp-home*))
+        (p3test1 (merge-pathnames 
+                 #P"local-projects/advent-of-code/2019/p3testinput.txt"
+                 ql:*quicklisp-home*))
+        (p3test2 (merge-pathnames 
+                 #P"local-projects/advent-of-code/2019/p3testinput2.txt"
+                 ql:*quicklisp-home*))
+        (p3test3 (merge-pathnames 
+                 #P"local-projects/advent-of-code/2019/p3testinput3.txt"
+                 ql:*quicklisp-home*)))
+    (is (= (aoc-19:problem3-1 p3test1) 6))
+    (is (= (aoc-19:problem3-1 p3test2) 159))
+    (is (= (aoc-19:problem3-1 p3test3) 135))
+    (is (= (aoc-19:problem3-1 p3path) 2193))))
+
+(test problem3-2
+  (let ((p3path (merge-pathnames 
+                 #P"local-projects/advent-of-code/2019/p3input.txt"
+                 ql:*quicklisp-home*)))
+    (is (= (aoc-19:problem3-2 p3path) 2))))

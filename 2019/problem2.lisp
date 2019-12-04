@@ -1,13 +1,13 @@
 (in-package :advent-of-code-2019)
 (defun problem2-1 (input-path)
-  (let* ((op-codes (parsing-helper input-path)))
+  (let* ((op-codes (p2-parsing-helper input-path)))
     (setf (elt op-codes 1) 42)
     (setf (elt op-codes 2) 59)
     (program-runner op-codes)
     (elt op-codes 0)))
 
 (defun problem2-2 (input-path)
-  (let* ((op-codes (parsing-helper input-path))
+  (let* ((op-codes (p2-parsing-helper input-path))
          (noun-values (alexandria:iota 100))
          (verb-values (alexandria:iota 100)))
     (dolist (noun-value noun-values)
@@ -20,7 +20,7 @@
               (return-from problem2-2 
                 (+ (* 100 noun-value) verb-value))))))))
 
-(defun parsing-helper (input-path)
+(defun p2-parsing-helper (input-path)
   (let* ((input-line (aoc-utils:input->vec input-path))
          (input-strings (cl-utilities:split-sequence 
                          #\, 

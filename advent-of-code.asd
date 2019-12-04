@@ -5,7 +5,8 @@
   :licence "AGPL 3.0"
   :depends-on (:alexandria 
                :local-time
-               :cl-utilities)
+               :cl-utilities
+               :cl-geometry)
   :components ((:file "packages")
                (:module "utils"
                         :depends-on ("packages")
