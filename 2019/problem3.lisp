@@ -2,12 +2,15 @@
 (defun problem3-1 (input-path)
   (let* ((inputs (p3-parsing-helper input-path))
          (line-segments (create-line-segments inputs))
-         (closest-intersection (find-closest-intersection line-segments)))
+         (ret-vals (find-closest-intersection line-segments))
+         (closest-intersection (elt ret-vals 0)))
     (manhattan-distance closest-intersection)))
 
 (defun problem3-2 (input-path)
-  (let* ((input (p3-parsing-helper input-path)))
-    2))
+  (let* ((input (p3-parsing-helper input-path))
+         (line-segments (create-line-segments input))
+         (ret-vals (find-closest-intersection line-segments)))
+    (elt ret-vals 1)))
 
 (defun create-line-segments (inputs)
   (let ((line-segments (list)))
@@ -29,13 +32,10 @@
                   ((equal (car command) "R") (setf (elt pt2 0)
                                                    (+ (elt pt1 0)
                                                       (cdr command)))))
-            (push (make-instance 'cl-geometry:line-segment 
-                                 :start (make-instance '2d-geometry:point
-                                                       :x (elt pt1 0)
-                                                       :y (elt pt1 1))
-                                 :end (make-instance '2d-geometry:point
-                                                     :x (elt pt2 0)
-                                                     :y (elt pt2 1)))
+            (push (line-segment-from-coords (elt pt1 0)
+                                            (elt pt1 1)
+                                            (elt pt2 0)
+                                            (elt pt2 1))
                   current-wire)
             (setf start-position pt2)))
         (setf current-wire (nreverse current-wire))
@@ -43,27 +43,51 @@
     line-segments))
 
 (defun find-closest-intersection (line-segments)
-  (let* ((current-closest (make-instance '2d-geometry:point 
-                                         :x most-positive-fixnum
-                                         :y most-positive-fixnum))
+  (let* ((current-closest (make-point most-positive-fixnum most-positive-fixnum))
+         (current-travel most-positive-fixnum)
          (first-wire (elt line-segments 0))
          (second-wire (elt line-segments 1))
          (wire-1-steps 0)
          (wire-2-steps 0))
-    (dolist (line-segment second-wire)
-      (setf wire-2-steps 0)
-      (dolist (comparison-segment first-wire)
+    (dolist (second-wire-segment second-wire)
+      (setf wire-1-steps 0)
+      (dolist (first-wire-segment first-wire)
         (let ((overlap (cl-geometry:line-segments-intersection-segment 
-                        line-segment comparison-segment))
+                        second-wire-segment first-wire-segment))
               (intersect (cl-geometry:line-segments-intersection-point
-                          line-segment comparison-segment))
+                          second-wire-segment first-wire-segment))
               (current-dist (manhattan-distance current-closest)))
           (let ((int-point (check-for-intersection overlap intersect)))
             (cond ((not (null int-point))
+                   (let ((intersection-travel (calculate-intersection-travel int-point
+                                                                             first-wire-segment
+                                                                             second-wire-segment
+                                                                             wire-1-steps
+                                                                             wire-2-steps)))
+                     (if (< intersection-travel current-travel)
+                         (setf current-travel intersection-travel)))
                    (if (< (manhattan-distance int-point) current-dist)
-                       (progn
-                         (setf current-closest int-point)))))))))
-    current-closest))
+                       (setf current-closest int-point))))))
+        (setf wire-1-steps (+ wire-1-steps (cl-geometry:line-segment-length first-wire-segment))))
+      (setf wire-2-steps (+ wire-2-steps (cl-geometry:line-segment-length second-wire-segment))))
+    (list current-closest current-travel)))
+
+(defun calculate-intersection-travel (int-point 
+                                      first-wire-segment 
+                                      second-wire-segment 
+                                      wire-1-steps 
+                                      wire-2-steps)
+  (let* ((wire-1-segment (line-segment-from-pts 
+                         (cl-geometry:start first-wire-segment)
+                         int-point))
+         (wire-2-segment (line-segment-from-pts
+                          (cl-geometry:start second-wire-segment)
+                          int-point))
+         (wire-1-travel (+ wire-1-steps
+                           (cl-geometry:line-segment-length wire-1-segment)))
+         (wire-2-travel (+ wire-2-steps
+                           (cl-geometry:line-segment-length wire-2-segment))))
+    (+ wire-1-travel wire-2-travel)))
 
 (defun check-for-intersection (overlap intersect)
   (cond ((and (null overlap) (not (null intersect)))
@@ -81,17 +105,6 @@
                     (< m-dist-end m-dist-start))
                (return-from check-for-intersection end-pt))))
         (t '())))
-
-(defgeneric is-origin (pt))
-(defmethod is-origin ((pt 2d-geometry:point))
-  (and (= 0 (2d-geometry:x pt)) (= 0 (2d-geometry:y pt))))
-(defgeneric is-not-origin (pt))
-(defmethod is-not-origin ((pt 2d-geometry:point))
-  (not (is-origin pt)))
-
-(defgeneric manhattan-distance (pt))
-(defmethod manhattan-distance ((pt 2d-geometry:point))
-  (+ (abs (2d-geometry:x pt)) (abs (2d-geometry:y pt))))
 
 (defun p3-parsing-helper (input-path)
   (let* ((input-lines (aoc-utils:input->list input-path))
@@ -115,3 +128,46 @@
                                   line))
                            input-strings)))
     input-pairs))
+
+(defgeneric get-start-x (ls))
+(defmethod get-start-x ((ls cl-geometry:line-segment))
+  (2d-geometry:x (cl-geometry:start ls)))
+
+(defgeneric get-start-y (ls))
+(defmethod get-start-y ((ls cl-geometry:line-segment))
+  (2d-geometry:y (cl-geometry:start ls)))
+
+(defgeneric get-end-x (ls))
+(defmethod get-end-x ((ls cl-geometry:line-segment))
+  (2d-geometry:x (cl-geometry:end ls)))
+
+(defgeneric get-end-y (ls))
+(defmethod get-end-y ((ls cl-geometry:line-segment))
+  (2d-geometry:y (cl-geometry:end ls)))
+
+(defgeneric is-origin (pt))
+(defmethod is-origin ((pt 2d-geometry:point))
+  (and (= 0 (2d-geometry:x pt)) (= 0 (2d-geometry:y pt))))
+
+(defgeneric is-not-origin (pt))
+(defmethod is-not-origin ((pt 2d-geometry:point))
+  (not (is-origin pt)))
+
+(defgeneric manhattan-distance (pt))
+(defmethod manhattan-distance ((pt 2d-geometry:point))
+  (+ (abs (2d-geometry:x pt)) (abs (2d-geometry:y pt))))
+
+(defun line-segment-from-coords (x1 y1 x2 y2)
+  (make-instance 'cl-geometry:line-segment 
+                 :start (make-point x1 y1)
+                 :end (make-point x2 y2)))
+
+(defun line-segment-from-pts (start-pt end-pt)
+  (make-instance 'cl-geometry:line-segment 
+                 :start start-pt
+                 :end end-pt))
+
+(defun make-point (x1 y1)
+  (make-instance '2d-geometry:point 
+                 :x x1
+                 :y y1))
