@@ -25,7 +25,7 @@
          (input-strings (cl-utilities:split-sequence 
                          #\, 
                          (elt input-line 0)))
-         (input-numbers (map 'array
+         (input-numbers (map 'vector
                              #'parse-integer
                              input-strings)))
     input-numbers))

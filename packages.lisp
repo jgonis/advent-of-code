@@ -1,3 +1,8 @@
+(defpackage :advent-of-code-2015
+  (:nicknames :aoc-15)
+  (:use :common-lisp)
+  (:export :problem1-1))
+
 (defpackage :advent-of-code-2016
   (:nicknames :aoc-16)
   (:use :common-lisp)

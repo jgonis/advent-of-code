@@ -14,6 +14,11 @@
                         :components ((:file "utils")
                                      (:file "primesAndFactors")
                                      (:file "datetime")))
+	       (:module "2015"
+		:depends-on ("packages"
+			     utils)
+		:serial t
+		:components ((:file "aoc2015")))
                (:module "2016" 
                         :depends-on ("packages" 
                                      utils)
@@ -51,17 +56,24 @@
   :serial t
   :components ((:file "packages.test")
                (:module "tests"
-                        :serial t
-                        :components ((:file "tests")))
+		:serial t
+		:components ((:file "tests")))
+
                (:module "utils/tests"
-                        :serial t
-                        :components ((:file "utiltests")))
-               (:module "2018/tests"
-                        :serial t
-                        :components ((:file "p4tests")))
-               (:module "2019/tests"
-                        :serial t
-                        :components ((:file "2019tests"))))
+		:serial t
+		:components ((:file "utiltests")))
+
+	       (:module "2018/tests"
+		:serial t
+		:components ((:file "p4tests")))
+
+	       (:module "2019/tests"
+		:serial t
+		:components ((:file "2019tests")))
+
+	       (:module "2015/tests"
+		:serial t
+		:components ((:file "2015tests"))))
   :perform (asdf:test-op 
             (op system)
             (funcall (read-from-string 

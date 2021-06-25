@@ -1,4 +1,4 @@
-(in-package :advent-of-code.tests)
+(in-package :advent-of-code-2019.tests)
 
 (test problem1-1
   (let ((p1path (merge-pathnames 
@@ -53,4 +53,5 @@
   (let ((p3path (merge-pathnames 
                  #P"local-projects/advent-of-code/2019/p3input.txt"
                  ql:*quicklisp-home*)))
-    (is (= (aoc-19:problem3-2 p3path) 2))))
+    ;; (is (= (aoc-19:problem3-2 p3path) 2))
+    ))
